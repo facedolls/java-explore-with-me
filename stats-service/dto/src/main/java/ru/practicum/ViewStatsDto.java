@@ -1,8 +1,13 @@
 package ru.practicum;
 
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+@ToString
 public class ViewStatsDto {
     private String app;
     private String uri;
