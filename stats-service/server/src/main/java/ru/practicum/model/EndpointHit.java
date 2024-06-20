@@ -1,11 +1,17 @@
-import lombok.Getter;
+package ru.practicum.model;
+
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.time.LocalDate;
 
-@Getter
+@Entity
 @NoArgsConstructor
-public class EndpointHitDto {
+public class EndpointHit {
+    @Id
+    @GeneratedValue
     private Long id;
     private String app;
     private String uri;
