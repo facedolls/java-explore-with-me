@@ -1,4 +1,4 @@
-package ru.practicum.exceptions;
+package ru.practicum.exception;
 
 import lombok.RequiredArgsConstructor;
 
@@ -9,4 +9,3 @@ public class ErrorResponse {
     private String message;
     private String timestamp;
 }
-

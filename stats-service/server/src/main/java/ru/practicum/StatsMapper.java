@@ -9,6 +9,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface StatsMapper {
+
     EndpointHit toEndpointHit(EndpointHitDto endpointHitDto);
 
     EndpointHitDto toEndpointHitDto(EndpointHit endpointHit);
