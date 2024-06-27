@@ -1,7 +1,7 @@
 package ru.practicum.service;
 
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,31 +15,31 @@ import java.util.List;
 
 @Service
 @Transactional
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserService {
-    private final UserMapper userMapper;
-    private final UserRepository userRepository;
+    private final UserMapper mapper;
+    private final UserRepository repository;
 
     public UserDto create(UserDto userDto) {
-        User user = userMapper.fromDtoToUser(userDto);
-        User createUser = userRepository.save(user);
+        User user = mapper.fromDtoToUser(userDto);
+        User createUser = repository.save(user);
 
-        return userMapper.fromUserToDto(createUser);
+        return mapper.fromUserToDto(createUser);
     }
 
     public List<UserDto> getAll(List<Long> id, Pageable pageable) {
         List<User> users;
         if (id != null && !id.isEmpty()) {
-            users = userRepository.findAllById(id, pageable);
+            users = repository.findAllByIdIn(id, pageable);
         } else {
-            users = userRepository.findAll(pageable).getContent();
+            users = repository.findAll(pageable).getContent();
         }
 
-        return userMapper.fromListUsersToDto(users);
+        return mapper.fromListUsersToDto(users);
     }
 
     public void deleteById(Long userId) {
-        userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User id:" + userId + " not found"));
-        userRepository.deleteById(userId);
+        repository.findById(userId).orElseThrow(() -> new NotFoundException("User id:" + userId + " not found"));
+        repository.deleteById(userId);
     }
 }

@@ -14,7 +14,7 @@ import ru.practicum.service.UserService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin/users")
+@RequestMapping(path = "/admin/users")
 @Slf4j
 @RequiredArgsConstructor
 @Validated
@@ -22,13 +22,13 @@ public class UserController {
     public static final String DEFAULT_FROM = "0";
     public static final String DEFAULT_SIZE = "10";
 
-    private final UserService userService;
+    private final UserService service;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto create(@RequestBody UserDto userDto) {
         log.info("Create user: {}", userDto);
-        return userService.create(userDto);
+        return service.create(userDto);
     }
 
     @GetMapping
@@ -38,13 +38,13 @@ public class UserController {
                                 @RequestParam(defaultValue = DEFAULT_SIZE) Integer size) {
         Pageable pageable = PageRequest.of(from / size, size);
 
-        return userService.getAll(id, pageable);
+        return service.getAll(id, pageable);
     }
 
     @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable Long userId) {
         log.info("Delete user id: {}", userId);
-        userService.deleteById(userId);
+        service.deleteById(userId);
     }
 }
