@@ -4,12 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.exception.BadRequestException;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,23 +22,20 @@ public class StatsController {
     private final StatsService statsService;
 
     @GetMapping("/stats")
-    public ResponseEntity<List<ViewStatsDto>> getStats(@RequestParam
-                                                       @DateTimeFormat(pattern = DATE_FORMAT) LocalDateTime start,
-                                                       @RequestParam
-                                                       @DateTimeFormat(pattern = DATE_FORMAT) LocalDateTime end,
-                                                       @RequestParam(required = false) List<String> uris,
-                                                       @RequestParam(defaultValue = "false") Boolean unique) {
-
-        if (start.isAfter(end)) {
-            throw new BadRequestException("Start date is older then end date");
-        }
-        log.info("GET /stats: start={}, end={}, uris={}, unique={}", start, end, uris, unique);
-        return new ResponseEntity<>(statsService.getStats(start, end, uris, unique), HttpStatus.OK);
+    public List<ViewStatsDto> getStats(@RequestParam @DateTimeFormat(pattern = DATE_FORMAT) @NotNull
+                                       LocalDateTime start,
+                                       @RequestParam @DateTimeFormat(pattern = DATE_FORMAT) @NotNull
+                                       LocalDateTime end,
+                                       @RequestParam(required = false) List<String> uris,
+                                       @RequestParam(defaultValue = "false", required = false) Boolean unique) {
+        log.info("GET /stats request for statistics: {}, {}, {}, {}", start, end, uris, unique);
+        return statsService.getStats(start, end, uris, unique);
     }
 
     @PostMapping("/hit")
-    public ResponseEntity<EndpointHitDto> createHit(@Valid @RequestBody EndpointHitDto endpointHitDto) {
-        log.info("POST /hit: endpoint={}", endpointHitDto);
-        return new ResponseEntity<>(statsService.createHit(endpointHitDto), HttpStatus.CREATED);
+    @ResponseStatus(HttpStatus.CREATED)
+    public EndpointHitDto createHit(@Valid @RequestBody EndpointHitDto endpointHitDto) {
+        log.info("POST /hit request to save information that request endpoint {}", endpointHitDto);
+        return statsService.createHit(endpointHitDto);
     }
 }

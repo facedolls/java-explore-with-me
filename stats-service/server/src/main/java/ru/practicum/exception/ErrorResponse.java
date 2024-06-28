@@ -1,11 +1,10 @@
 package ru.practicum.exception;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+@Getter
 @RequiredArgsConstructor
 public class ErrorResponse {
-    private String status;
-    private String reason;
-    private String message;
-    private String timestamp;
+    private final String error;
 }
