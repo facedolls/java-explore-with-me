@@ -29,7 +29,7 @@ public class CategoryService {
     }
 
     public CategoryDto update(CategoryDto categoryDto) {
-        long catId = categoryDto.getId();
+        Long catId = categoryDto.getId();
         Category categoryInRepo = getOrElseThrow(catId);
         if (categoryDto.getName() != null) {
             categoryInRepo.setName(categoryDto.getName());

@@ -2,7 +2,7 @@ package ru.practicum.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import ru.practicum.model.ParticipationState;
+import ru.practicum.model.AdminStateAction;
 
 import java.time.LocalDateTime;
 
@@ -11,13 +11,18 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class ParticipationRequestDto {
+public class AdminEventUpdateRequest {
     private static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-    Long id;
-    Long requester;
-    Long event;
-    ParticipationState status;
+    String annotation;
+    String title;
+    String description;
+    Integer participantLimit;
+    Long category;
+    LocationDto location;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATETIME_FORMAT)
-    LocalDateTime created;
+    LocalDateTime eventDate;
+    Boolean paid;
+    Boolean requestModeration;
+    AdminStateAction stateAction;
 }

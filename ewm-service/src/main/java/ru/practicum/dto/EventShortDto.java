@@ -2,22 +2,28 @@ package ru.practicum.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import ru.practicum.model.ParticipationState;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@Builder
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-public class ParticipationRequestDto {
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class EventShortDto {
     private static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     Long id;
-    Long requester;
-    Long event;
-    ParticipationState status;
+    String annotation;
+    String title;
+    CategoryDto category;
+    UserShortDto initiator;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATETIME_FORMAT)
-    LocalDateTime created;
+    LocalDateTime eventDate;
+    Boolean paid;
+    Long confirmedRequests;
+    Long views;
 }
