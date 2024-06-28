@@ -24,11 +24,11 @@ public class EventFullDto {
     CategoryDto category;
     UserShortDto initiator;
     Location location;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATETIME_FORMAT)
+    @JsonFormat(pattern = DATETIME_FORMAT)
     LocalDateTime createdOn;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATETIME_FORMAT)
+    @JsonFormat(pattern = DATETIME_FORMAT)
     LocalDateTime publishedOn;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATETIME_FORMAT)
+    @JsonFormat(pattern = DATETIME_FORMAT)
     LocalDateTime eventDate;
     EventState state;
     Boolean paid;
