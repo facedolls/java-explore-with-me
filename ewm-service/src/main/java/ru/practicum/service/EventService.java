@@ -347,7 +347,7 @@ public class EventService {
     private void checkEventForUser(Long userId, Long eventId) {
         Event event = getEventOrElseThrow(eventId);
         Long initiatorId = event.getInitiator().getId();
-        if (initiatorId != userId) {
+        if (!Objects.equals(initiatorId, userId)) {
             throw new NotFoundException("Event id " + eventId + " not found");
         }
     }
