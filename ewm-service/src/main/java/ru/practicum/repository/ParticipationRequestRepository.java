@@ -9,7 +9,7 @@ import ru.practicum.model.ParticipationState;
 import java.util.List;
 
 public interface ParticipationRequestRepository extends JpaRepository<ParticipationRequest, Long> {
-    @Query("SELECT COUNT(req) FROM ParticipationRequest req WHERE req.event.id = :eventId AND req.status = :status")
+    @Query("SELECT COUNT(r) FROM ParticipationRequest r WHERE r.event.id = :eventId AND r.status = :status")
     Long getCountByEventIdAndStatus(@Param("eventId") Long eventId, @Param("status") ParticipationState status);
 
     List<ParticipationRequest> findAllByEventIdInAndStatus(List<Long> eventIds, ParticipationState status);

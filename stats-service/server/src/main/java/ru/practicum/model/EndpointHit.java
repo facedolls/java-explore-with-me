@@ -1,25 +1,36 @@
 package ru.practicum.model;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "hits")
-@NoArgsConstructor
-@AllArgsConstructor
+
 @Getter
 @Setter
-@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Entity
+@Table(name = "endpoints_hits")
 public class EndpointHit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(name = "app")
-    private String app;
-    private String uri;
-    private String ip;
-    @Column(name = "time_stamp")
-    private LocalDateTime timestamp;
+    @Column(name = "hit_id")
+    Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "app_id", nullable = false)
+    App app;
+
+    @Column(name = "hit_uri")
+    String uri;
+
+    @Column(name = "hit_ip")
+    String ip;
+
+    @Column(name = "hit_timestamp")
+    LocalDateTime timestamp;
+
 }

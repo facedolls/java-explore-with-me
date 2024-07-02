@@ -4,52 +4,63 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.exception.EndTimeBeforeStartTimeException;
+import ru.practicum.exception.BadRequestException;
+import ru.practicum.model.App;
 import ru.practicum.model.EndpointHit;
 import ru.practicum.model.ViewStats;
+import ru.practicum.repository.AppRepository;
+import ru.practicum.repository.StatsRepository;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 @Service
-@RequiredArgsConstructor
-@Slf4j
 @Transactional
+@Slf4j
+@RequiredArgsConstructor
 public class StatsService {
-    private final StatsRepository repository;
-    private final StatsMapper mapper;
-
-    public List<ViewStatsDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
-        checkTime(start, end);
-        List<ViewStats> viewStats;
-
-        if ((uris == null || uris.isEmpty()) || uris.get(0).equals("/events")) {
-            viewStats = Boolean.TRUE.equals(unique)
-                    ? repository.findAllByDateBetweenAndUniqueIp(start, end)
-                    : repository.findAllByDateBetweenStartAndEnd(start, end);
-            return mapper.toViewStatsDtoList(viewStats);
-        }
-
-        viewStats = Boolean.TRUE.equals(unique)
-                ? repository.findAllByDateBetweenAndUriAndUniqueIp(start, end, uris)
-                : repository.findAllByDateBetweenAndUri(start, end, uris);
-
-        log.info("GET /stats: visit statistics");
-        return mapper.toViewStatsDtoList(viewStats);
-    }
+    private final StatsRepository endpointHitRepository;
+    private final AppRepository applicationRepository;
 
     public EndpointHitDto createHit(EndpointHitDto endpointHitDto) {
-        EndpointHit endpointHitSave = repository.save(mapper.toEndpointHit(endpointHitDto));
-        log.info("POST create hit {}", endpointHitSave);
-        return mapper.toEndpointHitDto(endpointHitSave);
+        App app = applicationRepository.findByName(endpointHitDto.getApp())
+                .or(saveApp(endpointHitDto))
+                .orElseThrow(IllegalStateException::new);
+
+        EndpointHit hit = StatsMapper.fromDtoToHit(endpointHitDto, app);
+        EndpointHit createdHit = endpointHitRepository.save(hit);
+        return StatsMapper.fromHitToDto(createdHit);
     }
 
-    private void checkTime(LocalDateTime start, LocalDateTime end) {
+    private Supplier<Optional<? extends App>> saveApp(EndpointHitDto endpointHitDto) {
+        return () -> {
+            App newApp = new App();
+            newApp.setName(endpointHitDto.getApp());
+            log.info("App save {}", newApp.getName());
+            return Optional.of(applicationRepository.save(newApp));
+        };
+    }
+
+    @Transactional(readOnly = true)
+    public List<ViewStatsDto> getViewStats(ViewStatsRequestDto viewStatsRequestDto) {
+        LocalDateTime start = viewStatsRequestDto.getStart();
+        LocalDateTime end = viewStatsRequestDto.getEnd();
+        List<String> uris = viewStatsRequestDto.getUris();
+
         if (end.isBefore(start)) {
-            log.warn("GET /stats: End time cannot be before/equals than start time: {}, {}", start, end);
-            throw new EndTimeBeforeStartTimeException("End time cannot be before start time",
-                    Collections.singletonList("Incorrect data"));
+            throw new BadRequestException("End can't be earlier than start");
         }
+
+        List<ViewStats> viewStatsList;
+        if (viewStatsRequestDto.isUnique()) {
+            log.info("Stats request from unique IP");
+            viewStatsList = endpointHitRepository.findViewStatsByUniqueIp(start, end, uris);
+        } else {
+            log.info("Stats request from non unique IP");
+            viewStatsList = endpointHitRepository.findViewStatsByNonUniqueIp(start, end, uris);
+        }
+        return StatsMapper.fromListViewStatToDto(viewStatsList);
     }
 }

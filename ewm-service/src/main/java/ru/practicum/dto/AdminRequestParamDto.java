@@ -1,16 +1,19 @@
 package ru.practicum.dto;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import ru.practicum.model.EventState;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@AllArgsConstructor
 @Getter
 @Setter
-@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class AdminRequestParamDto {
     List<Long> userIds;
     List<EventState> states;

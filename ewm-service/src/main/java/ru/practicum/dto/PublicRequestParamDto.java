@@ -1,17 +1,20 @@
 package ru.practicum.dto;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import ru.practicum.model.EventSort;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@AllArgsConstructor
 @Getter
 @Setter
-@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class PublicRequestParamDto {
     String text;
     List<Long> categories;

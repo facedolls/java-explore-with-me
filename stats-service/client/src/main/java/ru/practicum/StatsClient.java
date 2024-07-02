@@ -1,6 +1,7 @@
 package ru.practicum;
 
 import com.google.gson.Gson;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -17,33 +18,28 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Slf4j
 public class StatsClient extends BaseClient {
-    private static final String API_PRFX_STATS = "/stats";
-    private static final String API_PRFX_HIT = "/hit";
-    private static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    private static final String HIT_API_PREFIX = "/hit";
+    private static final String STATS_API_PREFIX = "/stats";
 
     @Autowired
     public StatsClient(@Value("${stats-service.url}") String serverUrl, RestTemplateBuilder builder) {
-        super(builder.uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl))
-                .requestFactory(HttpComponentsClientHttpRequestFactory::new)
-                .build());
+        super(
+                builder
+                        .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl))
+                        .requestFactory(HttpComponentsClientHttpRequestFactory::new)
+                        .build()
+        );
     }
 
-    public ResponseEntity<Object> createHit(EndpointHitDto dto) {
-        return post(API_PRFX_HIT, dto);
+    public ResponseEntity<Object> createHit(EndpointHitDto endpointHitDto) {
+        return post(HIT_API_PREFIX, endpointHitDto);
     }
 
-    public List<ViewStatsDto> getViews(LocalDateTime start, LocalDateTime end, List<String> uriList) {
-        Gson gson = new Gson();
-        ResponseEntity<Object> viewsObject = getStats(start, end, uriList, true);
-        String json = gson.toJson(viewsObject.getBody());
-        ViewStatsDto[] viewsArray = gson.fromJson(json, ViewStatsDto[].class);
-        return Arrays.asList(viewsArray);
-    }
-
-    public ResponseEntity<Object> getStats(LocalDateTime start, LocalDateTime end,
-                                           List<String> uris, boolean unique) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATETIME_FORMAT);
+    public ResponseEntity<Object> getViewStats(LocalDateTime start, LocalDateTime end,
+                                               List<String> uris, boolean unique) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("start", start.format(formatter));
         parameters.put("end", end.format(formatter));
@@ -53,9 +49,17 @@ public class StatsClient extends BaseClient {
         parameters.put("unique", unique);
 
         if (parameters.containsKey("uris")) {
-            return get(API_PRFX_STATS + "?start={start}&end={end}&uris={uris}&unique={unique}", parameters);
+            return get(STATS_API_PREFIX + "?start={start}&end={end}&uris={uris}&unique={unique}", parameters);
         } else {
-            return get(API_PRFX_STATS + "?start={start}&end={end}&unique={unique}", parameters);
+            return get(STATS_API_PREFIX + "?start={start}&end={end}&unique={unique}", parameters);
         }
+    }
+
+    public List<ViewStatsDto> getViews(LocalDateTime start, LocalDateTime end, List<String> uriList) {
+        Gson gson = new Gson();
+        ResponseEntity<Object> viewsObject = getViewStats(start, end, uriList, true);
+        String json = gson.toJson(viewsObject.getBody());
+        ViewStatsDto[] viewsArray = gson.fromJson(json, ViewStatsDto[].class);
+        return Arrays.asList(viewsArray);
     }
 }

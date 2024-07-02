@@ -1,6 +1,5 @@
 package ru.practicum.service;
 
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,48 +12,49 @@ import ru.practicum.repository.CategoryRepository;
 
 import java.util.List;
 
-
 @Service
-@Transactional
 @RequiredArgsConstructor
+@Transactional
 public class CategoryService {
-    private final CategoryMapper mapper;
-    private final CategoryRepository repository;
 
+    private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper;
 
-    public CategoryDto create(CategoryDto categoryDto) {
-        Category category = mapper.fromDtoToCategory(categoryDto);
-        Category createdCategory = repository.save(category);
-        return mapper.fromCategoryToDto(createdCategory);
+    @Transactional(readOnly = true)
+    public List<CategoryDto> getAll(Pageable pageable) {
+        List<Category> categories = categoryRepository.findAll(pageable).getContent();
+        return categoryMapper.fromListCategoriesToDto(categories);
     }
 
-    public CategoryDto update(CategoryDto categoryDto) {
+    @Transactional(readOnly = true)
+    public CategoryDto getCategory(Long catId) {
+        Category category = getCategoryOrElseThrow(catId);
+        return categoryMapper.fromCategoryToDto(category);
+    }
+
+    public CategoryDto createCategory(CategoryDto categoryDto) {
+        Category category = categoryMapper.fromDtoToCategory(categoryDto);
+        Category createdCategory = categoryRepository.save(category);
+        return categoryMapper.fromCategoryToDto(createdCategory);
+    }
+
+    public CategoryDto updateCategory(CategoryDto categoryDto) {
         Long catId = categoryDto.getId();
-        Category categoryInRepo = getOrElseThrow(catId);
+        Category categoryInRepo = getCategoryOrElseThrow(catId);
         if (categoryDto.getName() != null) {
             categoryInRepo.setName(categoryDto.getName());
         }
-        Category updatedCategory = repository.save(categoryInRepo);
-        return mapper.fromCategoryToDto(updatedCategory);
+        Category updatedCategory = categoryRepository.save(categoryInRepo);
+        return categoryMapper.fromCategoryToDto(updatedCategory);
     }
 
-    public CategoryDto get(Long catId) {
-        Category category = getOrElseThrow(catId);
-        return mapper.fromCategoryToDto(category);
+    public void deleteCategoryById(Long catId) {
+        getCategoryOrElseThrow(catId);
+        categoryRepository.deleteById(catId);
     }
 
-    public List<CategoryDto> getAll(Pageable pageable) {
-        List<Category> categories = repository.findAll(pageable).getContent();
-        return mapper.fromCategoryToDtoList(categories);
-    }
-
-    public void deleteById(Long catId) {
-        getOrElseThrow(catId);
-        repository.deleteById(catId);
-    }
-
-    private Category getOrElseThrow(Long catId) {
-        return repository.findById(catId)
-                .orElseThrow(() -> new NotFoundException("Category id: " + catId + " not found"));
+    private Category getCategoryOrElseThrow(Long catId) {
+        return categoryRepository.findById(catId)
+                .orElseThrow(() -> new NotFoundException("Category with id=" + catId + " was not found"));
     }
 }

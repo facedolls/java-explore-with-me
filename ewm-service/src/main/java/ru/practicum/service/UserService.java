@@ -1,6 +1,5 @@
 package ru.practicum.service;
 
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,32 +13,33 @@ import ru.practicum.repository.UserRepository;
 import java.util.List;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
+@Transactional
 public class UserService {
-    private final UserMapper mapper;
-    private final UserRepository repository;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    public UserDto create(UserDto userDto) {
-        User user = mapper.fromDtoToUser(userDto);
-        User createUser = repository.save(user);
-
-        return mapper.fromUserToDto(createUser);
+    public UserDto createUser(UserDto userDto) {
+        User user = userMapper.fromDtotoUser(userDto);
+        User createdUser = userRepository.save(user);
+        return userMapper.fromUserToDto(createdUser);
     }
 
-    public List<UserDto> getAll(List<Long> id, Pageable pageable) {
+    @Transactional(readOnly = true)
+    public List<UserDto> getAllUsers(List<Long> ids, Pageable pageable) {
         List<User> users;
-        if (id != null && !id.isEmpty()) {
-            users = repository.findAllByIdIn(id, pageable);
+        if (ids != null && !ids.isEmpty()) {
+            users = userRepository.findAllByIdIn(ids, pageable);
         } else {
-            users = repository.findAll(pageable).getContent();
+            users = userRepository.findAll(pageable).getContent();
         }
 
-        return mapper.fromListUsersToDto(users);
+        return userMapper.fromListUsersToDto(users);
     }
 
-    public void deleteById(Long userId) {
-        repository.findById(userId).orElseThrow(() -> new NotFoundException("User id:" + userId + " not found"));
-        repository.deleteById(userId);
+    public void deleteUserById(Long userId) {
+        userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User with id=" + userId + " was not found"));
+        userRepository.deleteById(userId);
     }
 }

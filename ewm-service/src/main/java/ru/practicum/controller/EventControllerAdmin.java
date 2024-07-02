@@ -20,16 +20,16 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/admin/events")
-@RequiredArgsConstructor
 @Slf4j
 @Validated
+@RequestMapping(path = "/admin/events")
+@RequiredArgsConstructor
 public class EventControllerAdmin {
     private static final String DEFAULT_FROM = "0";
     private static final String DEFAULT_SIZE = "10";
     private static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-    private final EventService service;
+    private final EventService eventService;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -41,16 +41,16 @@ public class EventControllerAdmin {
                                      @RequestParam(defaultValue = DEFAULT_FROM) @Min(0) Integer from,
                                      @RequestParam(defaultValue = DEFAULT_SIZE) Integer size) {
         log.info("Admin event request ");
-        AdminRequestParamDto requestParamDto = new AdminRequestParamDto(users, states, categories,
-                rangeStart, rangeEnd);
+        AdminRequestParamDto requestParamDto = new AdminRequestParamDto(users, states,
+                categories, rangeStart, rangeEnd);
         Pageable pageable = PageRequest.of(from / size, size);
-        return service.getAllByAdmin(requestParamDto, pageable);
+        return eventService.getAllByAdmin(requestParamDto, pageable);
     }
 
     @PatchMapping("/{eventId}")
     @ResponseStatus(HttpStatus.OK)
     public EventFullDto update(@Valid @RequestBody AdminEventUpdateRequest adminRequest, @PathVariable Long eventId) {
         log.info("Admin event update {}", adminRequest);
-        return service.updateByAdmin(adminRequest, eventId);
+        return eventService.updateByAdmin(adminRequest, eventId);
     }
 }

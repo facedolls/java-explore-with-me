@@ -9,18 +9,15 @@ import javax.persistence.*;
 
 @Getter
 @Setter
-@Entity
-@Table(name = "locations")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Location {
+@Entity
+@Table(name = "applications")
+public class App {
     @Id
+    @Column(name = "app_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "location_id")
     Long id;
 
-    @Column(name = "location_lat")
-    float lat;
-
-    @Column(name = "location_lon")
-    float lon;
+    @Column(name = "app_name", unique = true)
+    String name;
 }

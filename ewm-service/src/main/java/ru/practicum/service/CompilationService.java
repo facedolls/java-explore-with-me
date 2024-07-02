@@ -22,20 +22,20 @@ import java.util.Optional;
 @Transactional
 @RequiredArgsConstructor
 public class CompilationService {
-    private final CompilationMapper mapper;
-    private final CompilationRepository repository;
+    private final CompilationRepository compilationRepository;
     private final EventRepository eventRepository;
+    private final CompilationMapper compilationMapper;
 
     @Transactional(readOnly = true)
     public List<CompilationDto> getAllCompilations(Boolean pinned, Pageable pageable) {
-        List<Compilation> compilations = repository.findAllByPinned(pinned, pageable);
-        return mapper.fromCompilationListToDto(compilations);
+        List<Compilation> compilations = compilationRepository.findAllByPinned(pinned, pageable);
+        return compilationMapper.fromCompilationListToDto(compilations);
     }
 
     @Transactional(readOnly = true)
     public CompilationDto getCompilationById(Long compId) {
         Compilation compilation = getCompilationOrElseThrow(compId);
-        return mapper.fromCompilationToDto(compilation);
+        return compilationMapper.fromCompilationToDto(compilation);
     }
 
     public CompilationDto createCompilation(NewCompilationDto newCompilationDto) {
@@ -52,10 +52,10 @@ public class CompilationService {
             newCompilationDto.setPinned(false);
         }
 
-        Compilation savedCompilation = repository
-                .save(mapper.fromNewDtoToCompilation(newCompilationDto, events));
+        Compilation savedCompilation = compilationRepository
+                .save(compilationMapper.fromNewDtoToCompilation(newCompilationDto, events));
 
-        return mapper.fromCompilationToDto(savedCompilation);
+        return compilationMapper.fromCompilationToDto(savedCompilation);
     }
 
     public CompilationDto updateCompilation(Long compId, UpdateCompilationRequest compilationRequest) {
@@ -70,19 +70,19 @@ public class CompilationService {
         Optional.ofNullable(compilationRequest.getPinned())
                 .ifPresent(compilation::setPinned);
 
-        Compilation updatedCompilation = repository.save(compilation);
+        Compilation updatedCompilation = compilationRepository.save(compilation);
 
-        return mapper.fromCompilationToDto(updatedCompilation);
+        return compilationMapper.fromCompilationToDto(updatedCompilation);
     }
 
     public void deleteCompilationById(Long compId) {
         getCompilationById(compId);
-        repository.deleteById(compId);
+        compilationRepository.deleteById(compId);
 
     }
 
-    private Compilation getCompilationOrElseThrow(long compId) {
-        return repository.findById(compId)
-                .orElseThrow(() -> new NotFoundException("Compilation id " + compId + " not found"));
+    private Compilation getCompilationOrElseThrow(Long compId) {
+        return compilationRepository.findById(compId)
+                .orElseThrow(() -> new NotFoundException("Compilation with id=" + compId + " was not found"));
     }
 }

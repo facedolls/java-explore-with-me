@@ -10,29 +10,29 @@ import ru.practicum.service.ParticipationRequestService;
 import java.util.List;
 
 @RestController
+@Slf4j
 @RequestMapping(path = "/users/{userId}/requests")
 @RequiredArgsConstructor
-@Slf4j
 public class ParticipationRequestController {
-    private final ParticipationRequestService service;
+    private final ParticipationRequestService requestService;
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<ParticipationRequestDto> getAll(@PathVariable Long userId) {
+        return requestService.getAllRequestsByRequester(userId);
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ParticipationRequestDto create(@PathVariable Long userId, @RequestParam Long eventId) {
         log.info("Create request event {} from user: {}", eventId, userId);
-        return service.create(userId, eventId);
-    }
-
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<ParticipationRequestDto> getAll(@PathVariable Long userId) {
-        return service.getAll(userId);
+        return requestService.createRequest(userId, eventId);
     }
 
     @PatchMapping("/{requestId}/cancel")
     @ResponseStatus(HttpStatus.OK)
     public ParticipationRequestDto cancel(@PathVariable Long userId, @PathVariable Long requestId) {
         log.info("Cancel request: {}", requestId);
-        return service.cancel(userId, requestId);
+        return requestService.cancelRequestByRequester(userId, requestId);
     }
 }

@@ -19,11 +19,15 @@ public class EventShortDto {
     Long id;
     String annotation;
     String title;
+
     CategoryDto category;
     UserShortDto initiator;
+
     @JsonFormat(pattern = DATETIME_FORMAT)
     LocalDateTime eventDate;
+
     Boolean paid;
     Long confirmedRequests;
     Long views;
 }
+

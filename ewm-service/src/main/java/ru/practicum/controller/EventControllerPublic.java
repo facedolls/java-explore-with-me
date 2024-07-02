@@ -20,26 +20,24 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/events")
-@RequiredArgsConstructor
 @Slf4j
 @Validated
+@RequestMapping(path = "/events")
+@RequiredArgsConstructor
 public class EventControllerPublic {
     private static final String DEFAULT_FROM = "0";
     private static final String DEFAULT_SIZE = "10";
     private static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-    private final EventService service;
+    private final EventService eventService;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<EventShortDto> getAll(@RequestParam(defaultValue = "") String text,
                                       @RequestParam(required = false) List<Long> categories,
                                       @RequestParam(required = false) Boolean paid,
-                                      @RequestParam(required = false) @DateTimeFormat(pattern = DATETIME_FORMAT)
-                                          LocalDateTime rangeStart,
-                                      @RequestParam(required = false) @DateTimeFormat(pattern = DATETIME_FORMAT)
-                                          LocalDateTime rangeEnd,
+                                      @RequestParam(required = false) @DateTimeFormat(pattern = DATETIME_FORMAT) LocalDateTime rangeStart,
+                                      @RequestParam(required = false) @DateTimeFormat(pattern = DATETIME_FORMAT) LocalDateTime rangeEnd,
                                       @RequestParam(defaultValue = "false") boolean onlyAvailable,
                                       @RequestParam(defaultValue = "VIEWS") EventSort sort,
                                       @RequestParam(defaultValue = DEFAULT_FROM) @Min(0) Integer from,
@@ -50,12 +48,13 @@ public class EventControllerPublic {
                 rangeEnd, onlyAvailable, sort, request);
 
         Pageable pageable = PageRequest.of(from / size, size);
-        return service.getAllPublishedEvents(requestParamDto, pageable);
+        return eventService.getAllPublishedEvents(requestParamDto, pageable);
     }
 
     @GetMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public EventFullDto getById(@PathVariable Long id, HttpServletRequest request) {
-        return service.getPublishedEventById(id, request);
+    public EventFullDto getById(@PathVariable Long id,
+                                HttpServletRequest request) {
+        return eventService.getPublishedEventById(id, request);
     }
 }

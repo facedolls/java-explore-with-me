@@ -19,10 +19,10 @@ import java.util.List;
 @Validated
 @RequiredArgsConstructor
 public class CompilationControllerPublic {
-    public static final String DEFAULT_FROM = "0";
-    public static final String DEFAULT_SIZE = "10";
+    private static final String DEFAULT_FROM = "0";
+    private static final String DEFAULT_SIZE = "10";
 
-    private final CompilationService service;
+    private final CompilationService compilationService;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -30,12 +30,12 @@ public class CompilationControllerPublic {
                                        @RequestParam(defaultValue = DEFAULT_FROM) @Min(0) Integer from,
                                        @RequestParam(defaultValue = DEFAULT_SIZE) Integer size) {
         Pageable pageable = PageRequest.of(from / size, size);
-        return service.getAllCompilations(pinned, pageable);
+        return compilationService.getAllCompilations(pinned, pageable);
     }
 
     @GetMapping("/{compId}")
     @ResponseStatus(HttpStatus.OK)
     public CompilationDto getById(@PathVariable Long compId) {
-        return service.getCompilationById(compId);
+        return compilationService.getCompilationById(compId);
     }
 }

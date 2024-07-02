@@ -1,6 +1,5 @@
 package ru.practicum.mapper;
 
-import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.practicum.dto.EventFullDto;
@@ -12,11 +11,12 @@ import ru.practicum.model.Location;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
+@Mapper(componentModel = "spring")
 public interface EventMapper {
-    @Mapping(target = "id", ignore = true)
+
     @Mapping(target = "category", source = "category")
     @Mapping(target = "location", source = "location")
+    @Mapping(target = "id", ignore = true)
     Event fromDtoToEvent(NewEventDto dto, Category category, Location location);
 
     EventFullDto fromEventToFullDto(Event event);

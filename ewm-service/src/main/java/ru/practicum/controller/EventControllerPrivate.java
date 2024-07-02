@@ -15,15 +15,15 @@ import javax.validation.constraints.Min;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/users/{userId}/events")
-@RequiredArgsConstructor
 @Slf4j
 @Validated
+@RequestMapping(path = "/users/{userId}/events")
+@RequiredArgsConstructor
 public class EventControllerPrivate {
     private static final String DEFAULT_FROM = "0";
     private static final String DEFAULT_SIZE = "10";
 
-    private final EventService service;
+    private final EventService eventService;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -31,7 +31,7 @@ public class EventControllerPrivate {
                                       @RequestParam(defaultValue = DEFAULT_FROM) @Min(0) Integer from,
                                       @RequestParam(defaultValue = DEFAULT_SIZE) Integer size) {
         Pageable pageable = PageRequest.of(from / size, size);
-        return service.getAllByInitiator(userId, pageable);
+        return eventService.getAllByInitiator(userId, pageable);
     }
 
     @PostMapping
@@ -39,14 +39,14 @@ public class EventControllerPrivate {
     public EventFullDto create(@PathVariable Long userId,
                                @Valid @RequestBody NewEventDto newEventDto) {
         log.info("Event creation by initiator {}", newEventDto);
-        return service.createByInitiator(userId, newEventDto);
+        return eventService.createByInitiator(userId, newEventDto);
     }
 
     @GetMapping("/{eventId}")
     @ResponseStatus(HttpStatus.OK)
     public EventFullDto getById(@PathVariable Long userId,
                                 @PathVariable Long eventId) {
-        return service.getByIdByInitiator(userId, eventId);
+        return eventService.getByIdByInitiator(userId, eventId);
     }
 
     @PatchMapping("/{eventId}")
@@ -55,14 +55,14 @@ public class EventControllerPrivate {
                                     @PathVariable Long eventId,
                                     @Valid @RequestBody UserEventUpdateRequest userRequest) {
         log.info("Event update by initiator {}", userRequest);
-        return service.updateByInitiator(userId, eventId, userRequest);
+        return eventService.updateByInitiator(userId, eventId, userRequest);
     }
 
     @GetMapping("/{eventId}/requests")
     @ResponseStatus(HttpStatus.OK)
     public List<ParticipationRequestDto> getRequestsByEventId(@PathVariable Long userId,
                                                               @PathVariable Long eventId) {
-        return service.getRequestsByEventId(userId, eventId);
+        return eventService.getRequestsByEventId(userId, eventId);
     }
 
     @PatchMapping("/{eventId}/requests")
@@ -71,6 +71,6 @@ public class EventControllerPrivate {
                                                                  @PathVariable Long eventId,
                                                                  @Valid @RequestBody EventRequestStatusUpdateRequest statusUpdateRequest) {
         log.info("Updating status of participation requests {}", statusUpdateRequest);
-        return service.updateStatusOfRequests(userId, eventId, statusUpdateRequest);
+        return eventService.updateStatusOfRequests(userId, eventId, statusUpdateRequest);
     }
 }

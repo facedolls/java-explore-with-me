@@ -19,12 +19,18 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 public class ParticipationRequestService {
-    private final ParticipationRequestMapper mapper;
-    private final ParticipationRequestRepository repository;
+    private final ParticipationRequestRepository requestRepository;
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
+    private final ParticipationRequestMapper requestMapper;
 
-    public ParticipationRequestDto create(Long userId, Long eventId) {
+    @Transactional(readOnly = true)
+    public List<ParticipationRequestDto> getAllRequestsByRequester(Long userId) {
+        getUserOrElseThrow(userId);
+        return requestMapper.fromListRequestToDto(requestRepository.findAllByRequesterId(userId));
+    }
+
+    public ParticipationRequestDto createRequest(Long userId, Long eventId) {
         User requester = getUserOrElseThrow(userId);
         Event event = getEventOrElseThrow(eventId);
 
@@ -36,10 +42,11 @@ public class ParticipationRequestService {
         }
 
         if (event.getParticipantLimit() > 0) {
-            if (repository.getCountByEventIdAndStatus(eventId, ParticipationState.CONFIRMED) >= event.getParticipantLimit()) {
+            if (requestRepository.getCountByEventIdAndStatus(eventId, ParticipationState.CONFIRMED) >= event.getParticipantLimit()) {
                 throw new ConflictException("Limit of participants reached");
             }
         }
+
         ParticipationRequest participationRequest = new ParticipationRequest();
         participationRequest.setRequester(requester);
         participationRequest.setEvent(event);
@@ -50,17 +57,12 @@ public class ParticipationRequestService {
         } else {
             participationRequest.setStatus(ParticipationState.CONFIRMED);
         }
-        ParticipationRequest savedRequest = repository.save(participationRequest);
+        ParticipationRequest savedRequest = requestRepository.save(participationRequest);
 
-        return mapper.fromRequestToDto(savedRequest);
+        return requestMapper.fromRequestToDto(savedRequest);
     }
 
-    public List<ParticipationRequestDto> getAll(Long userId) {
-        getUserOrElseThrow(userId);
-        return mapper.fromListRequestToDto(repository.findAllByRequesterId(userId));
-    }
-
-    public ParticipationRequestDto cancel(Long userId, Long requestId) {
+    public ParticipationRequestDto cancelRequestByRequester(Long userId, Long requestId) {
         getUserOrElseThrow(userId);
         ParticipationRequest request = getRequestOrElseThrow(requestId);
 
@@ -70,22 +72,22 @@ public class ParticipationRequestService {
 
         request.setStatus(ParticipationState.CANCELED);
 
-        ParticipationRequest canceledRequest = repository.save(request);
+        ParticipationRequest canceledRequest = requestRepository.save(request);
 
-        return mapper.fromRequestToDto(canceledRequest);
+        return requestMapper.fromRequestToDto(canceledRequest);
     }
 
-    private ParticipationRequest getRequestOrElseThrow(long requestId) {
-        return repository.findById(requestId)
+    private ParticipationRequest getRequestOrElseThrow(Long requestId) {
+        return requestRepository.findById(requestId)
                 .orElseThrow(() -> new NotFoundException("ParticipationRequest id " + requestId + " not found"));
     }
 
-    private Event getEventOrElseThrow(long eventId) {
+    private Event getEventOrElseThrow(Long eventId) {
         return eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Event id " + eventId + " not found"));
     }
 
-    private User getUserOrElseThrow(long userId) {
+    private User getUserOrElseThrow(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User id " + userId + " not found"));
     }

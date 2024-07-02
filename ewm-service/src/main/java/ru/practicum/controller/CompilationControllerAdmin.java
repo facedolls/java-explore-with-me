@@ -16,13 +16,13 @@ import javax.validation.Valid;
 @RequestMapping(path = "/admin/compilations")
 @RequiredArgsConstructor
 public class CompilationControllerAdmin {
-    private final CompilationService service;
+    private final CompilationService compilationService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CompilationDto create(@Valid @RequestBody NewCompilationDto newCompilationDto) {
         log.info("Creat events compilation {}", newCompilationDto);
-        return service.createCompilation(newCompilationDto);
+        return compilationService.createCompilation(newCompilationDto);
     }
 
     @PatchMapping("/{compId}")
@@ -30,13 +30,13 @@ public class CompilationControllerAdmin {
     public CompilationDto updateCompilation(@PathVariable Long compId,
                                             @Valid @RequestBody UpdateCompilationRequest compilationRequest) {
         log.info("Update events compilation {}", compilationRequest);
-        return service.updateCompilation(compId, compilationRequest);
+        return compilationService.updateCompilation(compId, compilationRequest);
     }
 
     @DeleteMapping("/{compId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable Long compId) {
         log.info("Delete events compilation by id {}", compId);
-        service.deleteCompilationById(compId);
+        compilationService.deleteCompilationById(compId);
     }
 }

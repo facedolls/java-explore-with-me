@@ -1,16 +1,17 @@
 package ru.practicum;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode
-@ToString
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ViewStatsDto {
-    private String app;
-    private String uri;
-    private Long hits;
+    String app;
+    String uri;
+    Long hits;
 }
