@@ -5,13 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>ru.practicum</groupId>
-        <artifactId>stat-service</artifactId>
+        <artifactId>stats-service</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>stat-dto</artifactId>
-
-    <name>stats-dto</name>
+    <artifactId>dto</artifactId>
+    <packaging>jar</packaging>
+    <name>dto</name>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>

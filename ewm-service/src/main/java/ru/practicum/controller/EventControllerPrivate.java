@@ -12,6 +12,7 @@ import ru.practicum.service.EventService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
@@ -36,7 +37,7 @@ public class EventControllerPrivate {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public EventFullDto create(@PathVariable Long userId,
+    public EventFullDto create(@PathVariable @NotNull @Min(1L) Long userId,
                                @Valid @RequestBody NewEventDto newEventDto) {
         log.info("Event creation by initiator {}", newEventDto);
         return eventService.createByInitiator(userId, newEventDto);
