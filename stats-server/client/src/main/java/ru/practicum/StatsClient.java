@@ -22,9 +22,10 @@ import java.util.Map;
 public class StatsClient extends BaseClient {
     private static final String HIT_API_PREFIX = "/hit";
     private static final String STATS_API_PREFIX = "/stats";
+    private static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     @Autowired
-    public StatsClient(@Value("${stats-service.url}") String serverUrl, RestTemplateBuilder builder) {
+    public StatsClient(@Value("${stats-server.url}") String serverUrl, RestTemplateBuilder builder) {
         super(
                 builder
                         .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl))
@@ -39,7 +40,7 @@ public class StatsClient extends BaseClient {
 
     public ResponseEntity<Object> getViewStats(LocalDateTime start, LocalDateTime end,
                                                List<String> uris, boolean unique) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATETIME_FORMAT);
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("start", start.format(formatter));
         parameters.put("end", end.format(formatter));

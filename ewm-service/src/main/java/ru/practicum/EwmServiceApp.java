@@ -9,4 +9,3 @@ public class EwmServiceApp {
         SpringApplication.run(EwmServiceApp.class, args);
     }
 }
-
