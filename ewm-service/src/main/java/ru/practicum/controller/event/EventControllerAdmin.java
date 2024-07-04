@@ -8,9 +8,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.dto.AdminEventUpdateRequest;
-import ru.practicum.dto.AdminRequestParamDto;
+import ru.practicum.dto.event.AdminRequestParamDto;
 import ru.practicum.dto.event.EventFullDto;
+import ru.practicum.dto.participationRequest.AdminEventUpdateRequest;
 import ru.practicum.model.event.EventState;
 import ru.practicum.service.EventService;
 

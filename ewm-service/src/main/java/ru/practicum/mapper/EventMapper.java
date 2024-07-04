@@ -6,8 +6,8 @@ import ru.practicum.dto.event.EventFullDto;
 import ru.practicum.dto.event.EventShortDto;
 import ru.practicum.dto.event.NewEventDto;
 import ru.practicum.model.Category;
-import ru.practicum.model.event.Event;
 import ru.practicum.model.Location;
+import ru.practicum.model.event.Event;
 
 import java.util.List;
 

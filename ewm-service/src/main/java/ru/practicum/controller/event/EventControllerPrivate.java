@@ -7,8 +7,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.dto.*;
 import ru.practicum.dto.event.*;
+import ru.practicum.dto.participationRequest.ParticipationRequestDto;
+import ru.practicum.dto.participationRequest.UserEventUpdateRequest;
 import ru.practicum.service.EventService;
 
 import javax.validation.Valid;

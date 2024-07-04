@@ -15,6 +15,8 @@ import java.time.LocalDateTime;
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EndpointHitDto {
+    private static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
     @NotBlank
     String app;
     @NotBlank
@@ -22,9 +24,7 @@ public class EndpointHitDto {
     @NotBlank
     String ip;
     @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = DATETIME_FORMAT)
     @JsonProperty("timestamp")
     LocalDateTime time;
 }
-
-
