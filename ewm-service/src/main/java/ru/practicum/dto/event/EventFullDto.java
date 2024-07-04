@@ -6,7 +6,6 @@ import lombok.experimental.FieldDefaults;
 import ru.practicum.dto.CategoryDto;
 import ru.practicum.dto.LocationDto;
 import ru.practicum.dto.user.UserShortDto;
-import ru.practicum.model.Location;
 import ru.practicum.model.event.EventState;
 
 import java.time.LocalDateTime;
