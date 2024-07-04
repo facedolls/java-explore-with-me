@@ -25,7 +25,7 @@ public class StatsClient extends BaseClient {
     private static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     @Autowired
-    public StatsClient(@Value("${stats-server.url}") String serverUrl, RestTemplateBuilder builder) {
+    public StatsClient(@Value("${STATS_SERVICE_URL}") String serverUrl, RestTemplateBuilder builder) {
         super(
                 builder
                         .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl))
