@@ -33,7 +33,7 @@ public class Event {
     @ManyToOne
     @JoinColumn(name = "event_initiator_id")
     User initiator;
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "event_location_id")
     Location location;
     @Column(name = "event_created_on")

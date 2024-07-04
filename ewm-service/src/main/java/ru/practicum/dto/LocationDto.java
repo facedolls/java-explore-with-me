@@ -12,10 +12,10 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@EqualsAndHashCode
 public class LocationDto {
     @NotNull
     Float lat;
-
     @NotNull
     Float lon;
 }
