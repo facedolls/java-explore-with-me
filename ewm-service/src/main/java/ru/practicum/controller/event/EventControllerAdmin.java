@@ -1,4 +1,4 @@
-package ru.practicum.controller;
+package ru.practicum.controller.event;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,8 +10,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.AdminEventUpdateRequest;
 import ru.practicum.dto.AdminRequestParamDto;
-import ru.practicum.dto.EventFullDto;
-import ru.practicum.model.EventState;
+import ru.practicum.dto.event.EventFullDto;
+import ru.practicum.model.event.EventState;
 import ru.practicum.service.EventService;
 
 import javax.validation.Valid;

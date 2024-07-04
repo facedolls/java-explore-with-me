@@ -1,4 +1,4 @@
-package ru.practicum.model;
+package ru.practicum.model.event;
 
 public enum AdminStateAction {
     PUBLISH_EVENT,

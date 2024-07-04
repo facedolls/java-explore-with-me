@@ -1,9 +1,11 @@
-package ru.practicum.model;
+package ru.practicum.model.participationRequest;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import ru.practicum.model.event.Event;
+import ru.practicum.model.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

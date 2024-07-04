@@ -2,10 +2,10 @@ package ru.practicum.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.practicum.dto.CompilationDto;
-import ru.practicum.dto.NewCompilationDto;
+import ru.practicum.dto.compilation.CompilationDto;
+import ru.practicum.dto.compilation.NewCompilationDto;
 import ru.practicum.model.Compilation;
-import ru.practicum.model.Event;
+import ru.practicum.model.event.Event;
 
 import java.util.List;
 

@@ -1,8 +1,8 @@
-package ru.practicum.dto;
+package ru.practicum.dto.event;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.model.StateAction;
+import ru.practicum.model.participationRequest.StateAction;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;

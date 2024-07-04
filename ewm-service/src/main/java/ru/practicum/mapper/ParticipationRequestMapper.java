@@ -3,7 +3,7 @@ package ru.practicum.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.practicum.dto.ParticipationRequestDto;
-import ru.practicum.model.ParticipationRequest;
+import ru.practicum.model.participationRequest.ParticipationRequest;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package ru.practicum.controller;
+package ru.practicum.controller.event;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,10 +8,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.dto.EventFullDto;
-import ru.practicum.dto.EventShortDto;
+import ru.practicum.dto.event.EventFullDto;
+import ru.practicum.dto.event.EventShortDto;
 import ru.practicum.dto.PublicRequestParamDto;
-import ru.practicum.model.EventSort;
+import ru.practicum.model.event.EventSort;
 import ru.practicum.service.EventService;
 
 import javax.servlet.http.HttpServletRequest;

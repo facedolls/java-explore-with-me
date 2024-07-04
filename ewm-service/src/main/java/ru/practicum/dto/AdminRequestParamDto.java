@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.model.EventState;
+import ru.practicum.model.event.EventState;
 
 import java.time.LocalDateTime;
 import java.util.List;

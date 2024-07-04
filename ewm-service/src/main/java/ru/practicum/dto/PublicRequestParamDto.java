@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.model.EventSort;
+import ru.practicum.model.event.EventSort;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
