@@ -3,6 +3,7 @@ package ru.practicum.model.event;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.model.Category;
 import ru.practicum.model.Location;
@@ -31,9 +32,11 @@ public class Event {
     @JoinColumn(name = "event_category_id")
     Category category;
     @ManyToOne
+    @ToString.Exclude
     @JoinColumn(name = "event_initiator_id")
     User initiator;
     @OneToOne
+    @ToString.Exclude
     @JoinColumn(name = "event_location_id")
     Location location;
     @Column(name = "event_created_on")
