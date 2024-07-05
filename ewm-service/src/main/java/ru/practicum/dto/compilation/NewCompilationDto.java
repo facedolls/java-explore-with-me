@@ -18,7 +18,6 @@ public class NewCompilationDto {
     @NotBlank
     @Size(max = 50)
     String title;
-
     Boolean pinned;
     List<Long> events;
 }

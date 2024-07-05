@@ -19,13 +19,10 @@ public class Compilation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "compilation_id")
     Long id;
-
     @Column(name = "compilation_title")
     String title;
-
     @Column(name = "compilation_is_pinned")
     Boolean pinned;
-
     @ManyToMany
     @JoinTable(
             name = "compilations_events",

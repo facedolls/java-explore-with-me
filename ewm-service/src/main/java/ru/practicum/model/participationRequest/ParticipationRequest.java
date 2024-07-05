@@ -20,19 +20,15 @@ public class ParticipationRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "request_id")
     Long id;
-
     @ManyToOne
     @JoinColumn(name = "request_requester_id")
     User requester;
-
     @ManyToOne
     @JoinColumn(name = "request_event_id")
     Event event;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "request_status")
     ParticipationState status;
-
     @Column(name = "request_created_date")
     LocalDateTime created;
 }

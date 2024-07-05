@@ -21,21 +21,16 @@ public class AdminEventUpdateRequest {
 
     @Size(min = 20, max = 2000)
     String annotation;
-
     @Size(min = 3, max = 120)
     String title;
-
     @Size(min = 20, max = 7000)
     String description;
-
     Integer participantLimit;
     Long category;
     LocationDto location;
-
     @Future
     @JsonFormat(pattern = DATETIME_FORMAT)
     LocalDateTime eventDate;
-
     Boolean paid;
     Boolean requestModeration;
     AdminStateAction stateAction;

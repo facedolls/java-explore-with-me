@@ -21,7 +21,6 @@ public class ParticipationRequestDto {
     Long requester;
     Long event;
     ParticipationState status;
-
     @JsonFormat(pattern = DATETIME_FORMAT)
     LocalDateTime created;
 }
