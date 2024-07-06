@@ -38,15 +38,15 @@ public class UserController {
                                 @RequestParam(defaultValue = DEFAULT_FROM) @Min(0) Integer from,
                                 @RequestParam(defaultValue = DEFAULT_SIZE) Integer size) {
         Pageable pageable = PageRequest.of(from / size, size);
+        log.info("Admin request all users");
 
         return userService.getAllUsers(ids, pageable);
-
     }
 
     @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable Long userId) {
-        log.info("Delete user id: {}", userId);
+        log.info("Delete user id {}", userId);
         userService.deleteUserById(userId);
     }
 }

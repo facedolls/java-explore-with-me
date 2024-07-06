@@ -72,6 +72,20 @@ public class CommentService {
         return commentMapper.fromCommentToDto(updatedComment);
     }
 
+    public CommentDto updateByAdmin(UpdateCommentDto commentRequest) {
+        Comment comment = getCommentOrElseThrow(commentRequest.getId());
+
+        Optional.ofNullable(commentRequest.getText())
+                .ifPresent(comment::setText);
+        Comment updatedComment = commentRepository.save(comment);
+        return commentMapper.fromCommentToDto(updatedComment);
+    }
+
+    public void deleteCommentByIdAdmin(long commentId) {
+        getCommentOrElseThrow(commentId);
+        commentRepository.deleteById(commentId);
+    }
+
     private Comment getCommentOrElseThrow(Long commentId) {
         return commentRepository.findById(commentId)
                 .orElseThrow(() -> new NotFoundException("Comment id " + commentId + " not found"));

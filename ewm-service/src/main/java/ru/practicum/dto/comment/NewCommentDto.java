@@ -13,6 +13,6 @@ import javax.validation.constraints.Size;
 @Builder
 public class NewCommentDto {
     @NotBlank
-    @Size(min = 55, max = 5555)
+    @Size(min = 5, max = 5555)
     private String text;
 }

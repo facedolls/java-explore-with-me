@@ -31,7 +31,7 @@ public class CommentControllerPublic {
                                    @RequestParam(defaultValue = DEFAULT_FROM) @Min(0) int from,
                                    @RequestParam(defaultValue = DEFAULT_SIZE) Integer size) {
         Pageable pageable = PageRequest.of(from / size, size, Sort.by("created").descending());
-        log.info("Request all comments from PIBLIC API for event id {}", eventId);
+        log.info("Request all comments from PUBLIC API for event id {}", eventId);
         return commentService.getAllCommentsByEvent(eventId, pageable);
     }
 }
