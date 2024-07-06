@@ -2,6 +2,7 @@ package ru.practicum.dto.comment;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 import ru.practicum.dto.user.UserShortDto;
 
 import java.time.LocalDateTime;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 public class CommentDto {
     private static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
