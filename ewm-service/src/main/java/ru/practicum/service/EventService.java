@@ -43,7 +43,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class EventService {
-    private final static String eventPath = "/events/";
+    private final String eventPath = "/events/";
 
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
@@ -75,7 +75,7 @@ public class EventService {
         }
 
         List<Event> events = eventRepository.findAllByAdmin(userIds, states, categoryIds, rangeStart, rangeEnd, pageable);
-        List<Long> eventIds  = getEventIds(events);
+        List<Long> eventIds = getEventIds(events);
 
         Map<String, Long> views = getViewsByEvents(events);
 
