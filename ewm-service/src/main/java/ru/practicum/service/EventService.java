@@ -17,10 +17,12 @@ import ru.practicum.exception.BadRequestException;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.InvalidTimeException;
 import ru.practicum.exception.NotFoundException;
+import ru.practicum.mapper.CommentMapper;
 import ru.practicum.mapper.EventMapper;
 import ru.practicum.mapper.LocationMapper;
 import ru.practicum.mapper.ParticipationRequestMapper;
 import ru.practicum.model.Category;
+import ru.practicum.model.Comment;
 import ru.practicum.model.Location;
 import ru.practicum.model.User;
 import ru.practicum.model.event.AdminStateAction;
@@ -41,6 +43,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class EventService {
+    private final String eventPath = "/events/";
+
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
@@ -50,6 +54,8 @@ public class EventService {
     private final LocationMapper locationMapper;
     private final ParticipationRequestMapper requestMapper;
     private final StatsClient statClient;
+    private final CommentRepository commentRepository;
+    private final CommentMapper commentMapper;
 
     public List<EventFullDto> getAllByAdmin(AdminRequestParamDto requestParamDto, Pageable pageable) {
         List<Long> userIds = requestParamDto.getUserIds();
@@ -69,9 +75,7 @@ public class EventService {
         }
 
         List<Event> events = eventRepository.findAllByAdmin(userIds, states, categoryIds, rangeStart, rangeEnd, pageable);
-        List<Long> eventIds = events.stream()
-                .map(Event::getId)
-                .collect(Collectors.toList());
+        List<Long> eventIds = getEventIds(events);
 
         Map<String, Long> views = getViewsByEvents(events);
 
@@ -82,7 +86,7 @@ public class EventService {
         List<EventFullDto> fullDtoList = eventMapper.fromEventListToFullDto(events);
         fullDtoList.forEach(eventFullDto -> {
             eventFullDto.setConfirmedRequests(countRequestsByEventId.getOrDefault(eventFullDto.getId(), 0L));
-            eventFullDto.setViews(views.getOrDefault("/events/" + eventFullDto.getId(), 0L));
+            eventFullDto.setViews(views.getOrDefault(eventPath + eventFullDto.getId(), 0L));
         });
 
         return fullDtoList;
@@ -96,7 +100,10 @@ public class EventService {
     public EventFullDto getByIdByInitiator(Long userId, Long eventId) {
         Event event = getEventOrElseThrow(eventId);
         checkEventForUser(userId, eventId);
-        return eventMapper.fromEventToFullDto(event);
+        List<Comment> comments = commentRepository.findAllByEventId(eventId);
+        EventFullDto fullDto = eventMapper.fromEventToFullDto(event);
+        fullDto.setComments(commentMapper.fromCommentListToDto(comments));
+        return fullDto;
     }
 
     public List<ParticipationRequestDto> getRequestsByEventId(Long userId, Long eventId) {
@@ -143,9 +150,7 @@ public class EventService {
                             < event.getParticipantLimit()))
                     .collect(Collectors.toList());
         }
-        List<Long> eventIds = events.stream()
-                .map(Event::getId)
-                .collect(Collectors.toList());
+        List<Long> eventIds = getEventIds(events);
 
         Map<String, Long> views = getViewsByEvents(events);
 
@@ -156,7 +161,7 @@ public class EventService {
         List<EventShortDto> shortDtoList = eventMapper.fromEventListToShortDto(events);
         shortDtoList.forEach(eventShortDto -> {
             eventShortDto.setConfirmedRequests(countRequestsByEventId.getOrDefault(eventShortDto.getId(), 0L));
-            eventShortDto.setViews(views.getOrDefault("/events/" + eventShortDto.getId(), 0L));
+            eventShortDto.setViews(views.getOrDefault(eventPath + eventShortDto.getId(), 0L));
         });
 
         switch (sort) {
@@ -180,11 +185,12 @@ public class EventService {
 
         EventFullDto fullDto = eventMapper.fromEventToFullDto(event);
         Map<String, Long> views = getViewsByEvents(Collections.singletonList(event));
-        fullDto.setViews(views.getOrDefault("/events/" + fullDto.getId(), 0L));
+        fullDto.setViews(views.getOrDefault(eventPath + fullDto.getId(), 0L));
 
         Long limit = requestRepository.getCountByEventIdAndStatus(eventId, ParticipationState.CONFIRMED);
         fullDto.setConfirmedRequests(limit);
-
+        List<Comment> comments = commentRepository.findAllByEventId(eventId);
+        fullDto.setComments(commentMapper.fromCommentListToDto(comments));
         return fullDto;
     }
 
@@ -437,10 +443,16 @@ public class EventService {
         }
 
         List<String> eventUris = events.stream()
-                .map(event -> "/events/" + event.getId())
+                .map(event -> eventPath + event.getId())
                 .collect(Collectors.toList());
 
         return statClient.getViews(start, end, eventUris).stream()
                 .collect(Collectors.toMap(ViewStatsDto::getUri, ViewStatsDto::getHits));
+    }
+
+    private List<Long> getEventIds(List<Event> events) {
+        return events.stream()
+                .map(Event::getId)
+                .collect(Collectors.toList());
     }
 }

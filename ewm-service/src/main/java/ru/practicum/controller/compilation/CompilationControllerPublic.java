@@ -30,12 +30,14 @@ public class CompilationControllerPublic {
                                        @RequestParam(defaultValue = DEFAULT_FROM) @Min(0) Integer from,
                                        @RequestParam(defaultValue = DEFAULT_SIZE) Integer size) {
         Pageable pageable = PageRequest.of(from / size, size);
+        log.info("Requesting all compilations");
         return compilationService.getAllCompilations(pinned, pageable);
     }
 
     @GetMapping("/{compId}")
     @ResponseStatus(HttpStatus.OK)
     public CompilationDto getById(@PathVariable Long compId) {
+        log.info("Request compilation by id {}", compId);
         return compilationService.getCompilationById(compId);
     }
 }

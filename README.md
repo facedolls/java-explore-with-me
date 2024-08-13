@@ -21,4 +21,9 @@ Explore-with-me app
 
 3 Admin API allows to configure and maintain service
 
+4 Leave comments on events and moderate them
+
 [Main-service spec](ewm-main-service-spec.json)
+
+
+[PR](https://github.com/facedolls/java-explore-with-me/pull/3)
