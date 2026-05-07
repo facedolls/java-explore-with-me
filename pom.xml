@@ -32,7 +32,7 @@
 		<spring-boot-starter-validation.version>2.7.18</spring-boot-starter-validation.version>
 		<spring-boot-configuration-processor.version>2.7.18</spring-boot-configuration-processor.version>
 		<spring-boot-starter-data-jpa.version>2.7.18</spring-boot-starter-data-jpa.version>
-		<postgresql.version>42.7.3</postgresql.version>
+		<postgresql.version>42.7.11</postgresql.version>
 		<httpclient.version>4.5.13</httpclient.version>
 		<hibernate-core.version>5.6.15.Final</hibernate-core.version>
 		<jackson-datatype-jsr310.version>2.13.4</jackson-datatype-jsr310.version>
